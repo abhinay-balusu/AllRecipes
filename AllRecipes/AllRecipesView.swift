@@ -1,6 +1,7 @@
 // 
 
 import ComposableArchitecture
+import Kingfisher
 import SwiftUI
 
 struct AllRecipesView: View {
@@ -18,20 +19,46 @@ struct AllRecipesView: View {
                 case .loading:
                     ProgressView()
                         .navigationTitle("Recipes")
-                case .data:
-                    NavigationView {
-                        VStack {
-                            Image(systemName: "globe")
-                                .imageScale(.large)
-                                .foregroundStyle(.tint)
-                            Text("Hello, world!")
+                case let .data(recipes):
+                    GeometryReader { proxy in
+                        ScrollView(showsIndicators: false) {
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                                ForEach(recipes) { recipe in
+                                    ZStack(alignment: .leading) {
+                                        KFImage(recipe.photoUrlSmall)
+                                            .cancelOnDisappear(true)
+                                            .resizable()
+                                            .cornerRadius(12)
+                                            .shadow(radius: 5)
+                                            .opacity(0.5)
+                                        VStack(alignment: .leading) {
+                                            Spacer()
+                                            Text(recipe.name)
+                                                .font(.headline)
+                                            Text(recipe.cuisine)
+                                                .font(.subheadline)
+                                        }
+                                        .padding()
+                                    }
+                                }
+                            }
                         }
                         .padding()
                         .navigationTitle("Recipes")
                     }
                 case .error:
-                    EmptyView()
-                        .navigationTitle("Recipes")
+                    GeometryReader { proxy in
+                        ScrollView(showsIndicators: false) {
+                            VStack {
+                                Spacer()
+                                Text("Unable to load Recipes")
+                                Text("Please pull down to refresh")
+                                Spacer()
+                            }
+                            .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                            .navigationTitle("Recipes")
+                        }
+                    }
                 }
             }
         }

@@ -11,7 +11,9 @@ struct AllRecipesApp: App {
                 initialState: AllRecipesReducer.State(),
                 reducer: { AllRecipesReducer() },
                 withDependencies: { dependencyValues in
-                    dependencyValues.allRecipesRepository = .live
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    dependencyValues.allRecipesRepository = .live(jsonDecoder: jsonDecoder)
                 }
             ))
         }
