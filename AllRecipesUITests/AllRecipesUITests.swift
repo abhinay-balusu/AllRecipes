@@ -24,6 +24,7 @@ final class AllRecipesUITests: XCTestCase {
         app.launch()
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        XCTAssert(app.staticTexts["Apam Balik"].exists && app.staticTexts["Malaysian"].exists)
     }
 
     @MainActor
