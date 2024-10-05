@@ -12,15 +12,34 @@ struct AllRecipesView: View {
     }
 
     var body: some View {
-        NavigationView {
-            VStack {
-                Image(systemName: "globe")
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
-                Text("Hello, world!")
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            NavigationView {
+                switch viewStore.viewState {
+                case .loading:
+                    ProgressView()
+                        .navigationTitle("Recipes")
+                case .data:
+                    NavigationView {
+                        VStack {
+                            Image(systemName: "globe")
+                                .imageScale(.large)
+                                .foregroundStyle(.tint)
+                            Text("Hello, world!")
+                        }
+                        .padding()
+                        .navigationTitle("Recipes")
+                    }
+                case .error:
+                    EmptyView()
+                        .navigationTitle("Recipes")
+                }
             }
-            .padding()
-            .navigationTitle("Recipes")
+        }
+        .onAppear {
+            store.send(.viewDidAppear)
+        }
+        .refreshable {
+            store.send(.pullToRefresh)
         }
     }
 }
