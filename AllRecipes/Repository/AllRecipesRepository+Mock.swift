@@ -7,8 +7,8 @@ extension AllRecipesRepository {
 
     static var mock: AllRecipesRepository {
         AllRecipesRepository(
-            fetchRecipes: {
-                .success(.init(recipes: [
+            fetchRecipes: { () async throws(AllRecipesError) -> RecipesResponse in
+                return .init(recipes: [
                     .init(
                         cuisine: "American",
                         name: "Banana Pancakes",
@@ -18,15 +18,15 @@ extension AllRecipesRepository {
                         uuid: "f8b20884-1e54-4e72-a417-dabbc8d91f12",
                         youtubeUrl: URL(string: "https://www.youtube.com/watch?v=kSKtb2Sv-_U")
                     )
-                ]))
+                ])
             }
         )
     }
 
     static func failingWithError(_ error: AllRecipesError) -> AllRecipesRepository {
         AllRecipesRepository(
-            fetchRecipes: {
-                .failure(error)
+            fetchRecipes: { () async throws(AllRecipesError) -> RecipesResponse in
+                throw error
             }
         )
     }

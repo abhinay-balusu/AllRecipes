@@ -6,9 +6,9 @@ struct AllRecipesRepositoryDependencyKey: DependencyKey {
 
     // This is the value used by default
     static var liveValue: AllRecipesRepository = AllRecipesRepository(
-        fetchRecipes: {
+        fetchRecipes: { () async throws(AllRecipesError) -> RecipesResponse in
             assertionFailure("Must implement fetchRecipes")
-            return .failure(.internalError)
+            throw .internalError
         }
     )
 }
