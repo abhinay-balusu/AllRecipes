@@ -50,12 +50,11 @@ fileprivate extension AllRecipesReducer {
 
     func fetchRecipes() -> Effect<Action> {
         .run { send in
-            let result = await repository.fetchRecipes()
-            switch result {
-            case let .failure(error):
-                await send(.didFailToFetchRecipes(error))
-            case let .success(response):
-                await send(.didFetchRecipes(response.recipes))
+            do throws(AllRecipesError) {
+                let response: RecipesResponse = try await repository.fetchRecipes()
+                return await send(.didFetchRecipes(response.recipes))
+            } catch {
+                return await send(.didFailToFetchRecipes(error))
             }
         }
         .cancellable(
