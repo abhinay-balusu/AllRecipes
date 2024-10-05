@@ -33,15 +33,24 @@ struct AllRecipesReducer {
         Reduce { state, action in
             switch action {
             case .viewDidAppear:
-                return fetchRecipes()
+                guard case .data = state.viewState else {
+                    return fetchRecipes()
+                }
+                return .none
             case .pullToRefresh:
+                guard !state.viewState.isLoading else {
+                    return .none
+                }
+                state.viewState = .loading
                 return fetchRecipes()
             case let .didFetchRecipes(recipes):
-                state.viewState = .data(recipes)
+                let sortedRecipes = recipes.sorted { $0.name < $1.name }
+                state.viewState = .data(sortedRecipes)
+                return .none
             case .didFailToFetchRecipes:
                 state.viewState = .error
+                return .none
             }
-            return .none
         }
     }
 }

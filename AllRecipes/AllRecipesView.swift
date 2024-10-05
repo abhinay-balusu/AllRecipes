@@ -20,45 +20,9 @@ struct AllRecipesView: View {
                     ProgressView()
                         .navigationTitle("Recipes")
                 case let .data(recipes):
-                    GeometryReader { proxy in
-                        ScrollView(showsIndicators: false) {
-                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                                ForEach(recipes) { recipe in
-                                    ZStack(alignment: .leading) {
-                                        KFImage(recipe.photoUrlSmall)
-                                            .cancelOnDisappear(true)
-                                            .resizable()
-                                            .cornerRadius(12)
-                                            .shadow(radius: 5)
-                                            .opacity(0.5)
-                                        VStack(alignment: .leading) {
-                                            Spacer()
-                                            Text(recipe.name)
-                                                .font(.headline)
-                                            Text(recipe.cuisine)
-                                                .font(.subheadline)
-                                        }
-                                        .padding()
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                        .navigationTitle("Recipes")
-                    }
+                    recipesContent(viewStore, recipes: recipes)
                 case .error:
-                    GeometryReader { proxy in
-                        ScrollView(showsIndicators: false) {
-                            VStack {
-                                Spacer()
-                                Text("Unable to load Recipes")
-                                Text("Please pull down to refresh")
-                                Spacer()
-                            }
-                            .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
-                            .navigationTitle("Recipes")
-                        }
-                    }
+                    errorContent(viewStore)
                 }
             }
         }
@@ -67,6 +31,50 @@ struct AllRecipesView: View {
         }
         .refreshable {
             store.send(.pullToRefresh)
+        }
+    }
+
+    private func recipesContent(_ viewStore: ViewStoreOf<AllRecipesReducer>, recipes: [Recipe]) -> some View {
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                    ForEach(recipes) { recipe in
+                        ZStack(alignment: .leading) {
+                            KFImage(recipe.photoUrlSmall)
+                                .cancelOnDisappear(true)
+                                .resizable()
+                                .cornerRadius(12)
+                                .shadow(radius: 5)
+                                .opacity(0.5)
+                            VStack(alignment: .leading) {
+                                Spacer()
+                                Text(recipe.name)
+                                    .font(.headline)
+                                Text(recipe.cuisine)
+                                    .font(.subheadline)
+                            }
+                            .padding()
+                        }
+                    }
+                }
+            }
+            .padding()
+            .navigationTitle("Recipes")
+        }
+    }
+
+    private func errorContent(_ viewStore: ViewStoreOf<AllRecipesReducer>) -> some View {
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack {
+                    Spacer()
+                    Text("Unable to load Recipes")
+                    Text("Please pull down to refresh")
+                    Spacer()
+                }
+                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                .navigationTitle("Recipes")
+            }
         }
     }
 }
