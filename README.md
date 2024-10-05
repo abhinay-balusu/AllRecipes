@@ -1,7 +1,7 @@
 # AllRecipes
 
 ### Steps to Run the App
-- Clone the repo, open .xcodeproj and run by selecting a run destination
+- Clone the repo by selecting main branch, open .xcodeproj and run by selecting a run destination
 
 ### Focus Areas: What specific areas of the project did you prioritize? Why did you choose to focus on these areas?
 
