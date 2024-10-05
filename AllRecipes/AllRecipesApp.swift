@@ -9,7 +9,10 @@ struct AllRecipesApp: App {
         WindowGroup {
             AllRecipesView(store: Store(
                 initialState: AllRecipesReducer.State(),
-                reducer: { AllRecipesReducer() }
+                reducer: { AllRecipesReducer() },
+                withDependencies: { dependencyValues in
+                    dependencyValues.allRecipesRepository = .live
+                }
             ))
         }
     }
