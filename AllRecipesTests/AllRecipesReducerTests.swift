@@ -40,7 +40,7 @@ class AllRecipesReducerTests {
             initialState: AllRecipesReducer.State(),
             reducer: { AllRecipesReducer() },
             withDependencies: {
-                $0.allRecipesRepository = AllRecipesRepository.failingWithInternalError
+                $0.allRecipesRepository = AllRecipesRepository.failingWithError(.internalError)
             }
         )
 
@@ -57,7 +57,7 @@ class AllRecipesReducerTests {
             initialState: AllRecipesReducer.State(),
             reducer: { AllRecipesReducer() },
             withDependencies: {
-                $0.allRecipesRepository = AllRecipesRepository.failingWithRemoteError
+                $0.allRecipesRepository = AllRecipesRepository.failingWithError(.badServerResponse)
             }
         )
 

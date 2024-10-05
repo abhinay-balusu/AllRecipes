@@ -23,18 +23,10 @@ extension AllRecipesRepository {
         )
     }
 
-    static var failingWithInternalError: AllRecipesRepository {
+    static func failingWithError(_ error: AllRecipesError) -> AllRecipesRepository {
         AllRecipesRepository(
             fetchRecipes: {
-                .failure(.internalError)
-            }
-        )
-    }
-
-    static var failingWithRemoteError: AllRecipesRepository {
-        AllRecipesRepository(
-            fetchRecipes: {
-                .failure(.remoteError)
+                .failure(error)
             }
         )
     }

@@ -4,7 +4,13 @@ import Dependencies
 
 struct AllRecipesRepositoryDependencyKey: DependencyKey {
 
-    static var liveValue: AllRecipesRepository = .failingWithInternalError
+    // This is the value used by default
+    static var liveValue: AllRecipesRepository = AllRecipesRepository(
+        fetchRecipes: {
+            assertionFailure("Must implement fetchRecipes")
+            return .failure(.internalError)
+        }
+    )
 }
 
 extension DependencyValues {
