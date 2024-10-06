@@ -2,5 +2,5 @@
 
 struct AllRecipesRepository {
 
-    var fetchRecipes: () async throws(AllRecipesError) -> RecipesResponse
+    var fetchRecipes: @Sendable () async throws(AllRecipesError) -> RecipesResponse
 }

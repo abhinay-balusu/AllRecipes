@@ -12,6 +12,7 @@ struct AllRecipesReducer {
         enum ViewState<Action: Equatable>: Equatable {
             case loading
             case data([Recipe])
+            case empty
             case error
 
             public var isLoading: Bool {
@@ -34,6 +35,7 @@ struct AllRecipesReducer {
             switch action {
             case .viewDidAppear:
                 guard case .data = state.viewState else {
+                    state.viewState = .loading
                     return fetchRecipes()
                 }
                 return .none
@@ -44,6 +46,10 @@ struct AllRecipesReducer {
                 state.viewState = .loading
                 return fetchRecipes()
             case let .didFetchRecipes(recipes):
+                guard !recipes.isEmpty else {
+                    state.viewState = .empty
+                    return .none
+                }
                 let sortedRecipes = recipes.sorted { $0.name < $1.name }
                 state.viewState = .data(sortedRecipes)
                 return .none
