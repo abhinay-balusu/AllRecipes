@@ -10,14 +10,16 @@ enum AllRecipesError: Error, Equatable {
     case incorrectUrl
 }
 
-protocol NetworkManagerInterface {
+extension AllRecipesError: Sendable { }
+
+protocol NetworkManagerInterface: Sendable {
 
     func request<T: Decodable>(from url: URL?) async throws(AllRecipesError) -> T
 }
 
-class NetworkManager {
+final class NetworkManager {
 
-    static let shared = NetworkManager()
+    @MainActor static let shared = NetworkManager()
 
     private let session: URLSession
     private let jsonDecoder: JSONDecoder
@@ -41,14 +43,13 @@ extension NetworkManager: NetworkManagerInterface {
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
                 throw AllRecipesError.badServerResponse
             }
-            do {
-                let response = try jsonDecoder.decode(T.self, from: data)
-                return response
-            } catch {
-                throw AllRecipesError.decodingError(error.localizedDescription)
-            }
+            return try jsonDecoder.decode(T.self, from: data)
         } catch {
-            throw AllRecipesError.remoteError(error.localizedDescription)
+            if error is DecodingError {
+                throw AllRecipesError.decodingError(error.localizedDescription)
+            } else {
+                throw AllRecipesError.remoteError(error.localizedDescription)
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ import Dependencies
 struct AllRecipesRepositoryDependencyKey: DependencyKey {
 
     // This is the value used by default
-    static var liveValue: AllRecipesRepository = AllRecipesRepository(
+    static let liveValue: AllRecipesRepository = AllRecipesRepository(
         fetchRecipes: { () async throws(AllRecipesError) -> RecipesResponse in
             assertionFailure("Must implement fetchRecipes")
             throw .internalError

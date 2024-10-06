@@ -23,6 +23,14 @@ extension AllRecipesRepository {
         )
     }
 
+    static var empty: AllRecipesRepository {
+        AllRecipesRepository(
+            fetchRecipes: { () async throws(AllRecipesError) -> RecipesResponse in
+                return .init(recipes: [])
+            }
+        )
+    }
+
     static func failingWithError(_ error: AllRecipesError) -> AllRecipesRepository {
         AllRecipesRepository(
             fetchRecipes: { () async throws(AllRecipesError) -> RecipesResponse in

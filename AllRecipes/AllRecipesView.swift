@@ -21,6 +21,8 @@ struct AllRecipesView: View {
                         .navigationTitle("Recipes")
                 case let .data(recipes):
                     recipesContent(viewStore, recipes: recipes)
+                case .empty:
+                    emptyContent(viewStore)
                 case .error:
                     errorContent(viewStore)
                 }
@@ -60,6 +62,20 @@ struct AllRecipesView: View {
             }
             .padding()
             .navigationTitle("Recipes")
+        }
+    }
+
+    private func emptyContent(_ viewStore: ViewStoreOf<AllRecipesReducer>) -> some View {
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack {
+                    Spacer()
+                    Text("No Recipes found")
+                    Spacer()
+                }
+                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                .navigationTitle("Recipes")
+            }
         }
     }
 
